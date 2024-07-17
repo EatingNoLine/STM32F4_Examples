@@ -4,7 +4,7 @@ STM32F4xx示例库, 收集和展示了在开发和使用STM32F4时的一些频�
 
 ## 硬件
 
-- STM32F4神舟号开发板:
+- STM32F4神舟号开发板 (STM32F407ZGT6):
 
     ![Pic](https://shop.r10s.com/318/3e6/fbd7/7503/c01c/b623/4fbf/117ced84e60242ac110004.jpg)
 
