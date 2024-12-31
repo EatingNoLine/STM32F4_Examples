@@ -57,16 +57,46 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define ENC_A_Pin GPIO_PIN_6
-#define ENC_A_GPIO_Port GPIOA
-#define ENC_B_Pin GPIO_PIN_7
-#define ENC_B_GPIO_Port GPIOA
-#define M_INB_Pin GPIO_PIN_9
-#define M_INB_GPIO_Port GPIOE
-#define M_INA_Pin GPIO_PIN_11
-#define M_INA_GPIO_Port GPIOE
-#define M_PWM_Pin GPIO_PIN_13
-#define M_PWM_GPIO_Port GPIOE
+#define DM_PWM1_Pin GPIO_PIN_5
+#define DM_PWM1_GPIO_Port GPIOE
+#define DM_PWM2_Pin GPIO_PIN_6
+#define DM_PWM2_GPIO_Port GPIOE
+#define DM_INB3_Pin GPIO_PIN_1
+#define DM_INB3_GPIO_Port GPIOF
+#define DM_INA4_Pin GPIO_PIN_2
+#define DM_INA4_GPIO_Port GPIOF
+#define DM_INB1_Pin GPIO_PIN_3
+#define DM_INB1_GPIO_Port GPIOF
+#define DM_INA2_Pin GPIO_PIN_4
+#define DM_INA2_GPIO_Port GPIOF
+#define Enc_2A_Pin GPIO_PIN_0
+#define Enc_2A_GPIO_Port GPIOA
+#define Enc_2B_Pin GPIO_PIN_1
+#define Enc_2B_GPIO_Port GPIOA
+#define DM_PWM3_Pin GPIO_PIN_2
+#define DM_PWM3_GPIO_Port GPIOA
+#define DM_PWM4_Pin GPIO_PIN_3
+#define DM_PWM4_GPIO_Port GPIOA
+#define Enc_3A_Pin GPIO_PIN_6
+#define Enc_3A_GPIO_Port GPIOA
+#define Enc_3B_Pin GPIO_PIN_7
+#define Enc_3B_GPIO_Port GPIOA
+#define DM_INA3_Pin GPIO_PIN_4
+#define DM_INA3_GPIO_Port GPIOC
+#define DM_INB4_Pin GPIO_PIN_5
+#define DM_INB4_GPIO_Port GPIOC
+#define DM_INA1_Pin GPIO_PIN_11
+#define DM_INA1_GPIO_Port GPIOF
+#define DM_INB2_Pin GPIO_PIN_12
+#define DM_INB2_GPIO_Port GPIOF
+#define Enc_1A_Pin GPIO_PIN_9
+#define Enc_1A_GPIO_Port GPIOE
+#define Enc_1B_Pin GPIO_PIN_11
+#define Enc_1B_GPIO_Port GPIOE
+#define Enc_4A_Pin GPIO_PIN_12
+#define Enc_4A_GPIO_Port GPIOD
+#define Enc_4B_Pin GPIO_PIN_13
+#define Enc_4B_GPIO_Port GPIOD
 
 /* USER CODE BEGIN Private defines */
 

@@ -26,11 +26,10 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
+#include <string.h>
 
-// #include "protocol.h"
-#include "encoder.h"
-#include "motor.h"
-#include "pid.h"
+#include "motor_control.h"
+#include "vofa.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -40,7 +39,15 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#ifdef __GNUC__
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#define GETCHAR_PROTOTYPE int __io_getchar(void)
+#else
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#define GETCHAR_PROTOTYPE int fgetc(FILE *f)
+#endif
 
+#define RXBUFFERSIZE 256
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -51,24 +58,13 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-Motor_TypeDef motor;
-Encoder_Typedef encoder;
-PID_TypeDef pid;
-uint32_t output = 0;
-
-uint32_t target_position = 500;
-uint32_t position = 0;
-
-double speed = 0.0;
-double target_speed = 5.0;
+char RxBuffer[RXBUFFERSIZE];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-void Az_Motor_Init(void);
-void Az_Encoder_Init(void);
-void Az_PID_Init(void);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -82,6 +78,7 @@ void Az_PID_Init(void);
  */
 int main(void) {
   /* USER CODE BEGIN 1 */
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -103,30 +100,45 @@ int main(void) {
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_USART1_UART_Init();
   MX_TIM1_Init();
+  MX_TIM2_Init();
   MX_TIM3_Init();
-  MX_TIM8_Init();
+  MX_TIM4_Init();
+  MX_TIM5_Init();
+  MX_TIM9_Init();
+  MX_TIM14_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  printf("Program Start\n\n");
+  setvbuf(stdin, NULL, _IONBF, 0);
 
-  Az_Motor_Init();
-  Az_Encoder_Init();
-  Az_PID_Init();
+  DM_Init();
+  Encoder_Init();
+  // PID_Init();
 
-  // start the motor
-  Motor_Run(&motor);
+  DM_SetOutput(0, 100);
+  // DM_SetOutput(1, 100);
+  // DM_SetOutput(2, 100);
+  // DM_SetOutput(3, 100);
+
+  // DM_SetOutput(1, 100);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  // char Buffer[10] = {0};
   while (1) {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    printf("tick:%04ld speed = %.4lf, position = %3ld, output = %5ld\n\n", HAL_GetTick(),
-           speed, position, output);
-    HAL_Delay(300);
+    printf("count = %ld,%ld,%ld,%ld\n", Encoder_GetCount(0),
+           Encoder_GetCount(1), Encoder_GetCount(2), Encoder_GetCount(3));
+    HAL_Delay(100);
+
+    // scanf("%s", Buffer);
+    // AdjustPID(Buffer);
+    // getchar();p
+    // memset(Buffer, 0, sizeof(Buffer));
   }
   /* USER CODE END 3 */
 }
@@ -175,39 +187,17 @@ void SystemClock_Config(void) {
 }
 
 /* USER CODE BEGIN 4 */
-void Az_Motor_Init(void) {
-  // Initialize the motor
-  motor.pwm_timer = &htim1;
-  motor.pwm_channel = TIM_CHANNEL_3;
-  motor.ina_port = M_INA_GPIO_Port;
-  motor.ina_pin = M_INA_Pin;
-  motor.inb_port = M_INB_GPIO_Port;
-  motor.inb_pin = M_INB_Pin;
-  motor.ratio = 27;
-  Motor_Init(&motor);
-}
-
-void Az_Encoder_Init(void) {
-  encoder.timer = &htim3;
-  encoder.channels = TIM_CHANNEL_1 | TIM_CHANNEL_2;
-  encoder.frequency = 1;
-  encoder.ppr = 17;
-  Encoder_Init(&encoder);
-}
-
-void Az_PID_Init(void) {
-  const double Kp = 3.0;
-  const double Ki = 1.0;
-  const double Kd = 1.0;
-  PID_Init(&pid, Kp, Ki, Kd, 100, target_speed);
-}
-
-// retarget the stdout to uart1
-int __io_putchar(int ch) {
-  HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 0xFFFF);
+PUTCHAR_PROTOTYPE {
+  HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
   return ch;
 }
 
+GETCHAR_PROTOTYPE {
+  uint8_t ch = 0;
+  __HAL_UART_CLEAR_OREFLAG(&huart1);
+  HAL_UART_Receive(&huart1, &ch, 1, HAL_MAX_DELAY);
+  return ch;
+}
 /* USER CODE END 4 */
 
 /**
